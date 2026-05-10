@@ -1,0 +1,87 @@
+#!/bin/sh
+#
+# @name Octorotor Coaxial Custom
+# @type Octorotor coaxial
+# @class Copter
+#
+# Motor layout (nhìn từ trên xuống, X = front):
+#
+#       FRONT (+X)
+#   M1(FL) M0(FR)
+#      \   /
+#       [X]
+#      /   \
+#   M2(BL) M3(BR)
+#
+# Coaxial: mỗi arm có 2 motor chồng nhau
+#   FL: M1(upper,CW)  + M4(lower,CCW)
+#   FR: M0(upper,CCW) + M5(lower,CW)
+#   BL: M2(upper,CCW) + M7(lower,CW)  <- prop8 trong SDF
+#   BR: M3(upper,CW)  + M6(lower,CCW) <- prop7 trong SDF
+#
+# Mapping channel → joint:
+#   CH0 → prop1 (FR upper CCW)
+#   CH1 → prop2 (FL upper CW)
+#   CH2 → prop3 (BL upper CCW)
+#   CH3 → prop4 (BR upper CW)
+#   CH4 → prop5 (FL lower CCW)
+#   CH5 → prop6 (FR lower CW)
+#   CH6 → prop7 (BR lower CCW)
+#   CH7 → prop8 (BL lower CW)
+
+. ${R}etc/init.d/rc.mc_defaults
+
+param set-default CA_AIRFRAME 0
+param set-default CA_ROTOR_COUNT 8
+
+# --- Tầng trên ---
+# ROTOR0 = prop1 = Front-Right upper, CCW → KM dương
+param set-default CA_ROTOR0_PX  0.1905
+param set-default CA_ROTOR0_PY 0.1905
+param set-default CA_ROTOR0_KM  0.035
+
+# ROTOR1 = prop2 = Front-Left upper, CW → KM âm
+param set-default CA_ROTOR1_PX  0.1905
+param set-default CA_ROTOR1_PY  -0.1905
+param set-default CA_ROTOR1_KM -0.035
+
+# ROTOR2 = prop3 = Back-Left upper, CCW → KM dương
+param set-default CA_ROTOR2_PX -0.1905
+param set-default CA_ROTOR2_PY  -0.1905
+param set-default CA_ROTOR2_KM  0.035
+
+# ROTOR3 = prop4 = Back-Right upper, CW → KM âm
+param set-default CA_ROTOR3_PX -0.1905
+param set-default CA_ROTOR3_PY 0.1905
+param set-default CA_ROTOR3_KM -0.035
+
+# --- Tầng dưới (coaxial, ngược chiều với motor cùng arm) ---
+# ROTOR4 = prop5 = Front-Left lower, CCW → KM dương (ngược ROTOR1/CW)
+param set-default CA_ROTOR4_PX  0.1905
+param set-default CA_ROTOR4_PY  -0.1905
+param set-default CA_ROTOR4_KM  0.035
+
+# ROTOR5 = prop6 = Front-Right lower, CW → KM âm (ngược ROTOR0/CCW)
+param set-default CA_ROTOR5_PX  0.1905
+param set-default CA_ROTOR5_PY 0.1905
+param set-default CA_ROTOR5_KM -0.035
+
+# ROTOR6 = prop7 = Back-Right lower, CCW → KM dương (ngược ROTOR3/CW)
+param set-default CA_ROTOR6_PX -0.1905
+param set-default CA_ROTOR6_PY 0.1905
+param set-default CA_ROTOR6_KM  0.035
+
+# ROTOR7 = prop8 = Back-Left lower, CW → KM âm (ngược ROTOR2/CCW)
+param set-default CA_ROTOR7_PX -0.1905
+param set-default CA_ROTOR7_PY  -0.1905
+param set-default CA_ROTOR7_KM -0.035
+
+# --- PWM output mapping ---
+param set-default PWM_MAIN_FUNC1 101
+param set-default PWM_MAIN_FUNC2 102
+param set-default PWM_MAIN_FUNC3 103
+param set-default PWM_MAIN_FUNC4 104
+param set-default PWM_MAIN_FUNC5 105
+param set-default PWM_MAIN_FUNC6 106
+param set-default PWM_MAIN_FUNC7 107
+param set-default PWM_MAIN_FUNC8 108
