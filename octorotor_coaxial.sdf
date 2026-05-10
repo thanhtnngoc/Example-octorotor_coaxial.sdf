@@ -52,8 +52,6 @@
       <gravity>1</gravity>
       <velocity_decay/>
     </link>
-    
-    
     <link name='/imu_link'>
       <pose>0 0 0.085 0 0 0</pose>
       <inertial>
@@ -86,9 +84,7 @@
         </dynamics>
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
-    </joint>
-    
-    
+    </joint>    
     <link name='rotor_0'>
       <pose>0.1905 -0.1905 0.23 0 0 0</pose>
       <inertial>
@@ -154,8 +150,6 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
-    
-    
     <link name='rotor_1'>
       <pose>0.1905 0.1905 0.23 0 0 0</pose>
       <inertial>
@@ -221,8 +215,6 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
-    
-    
     <link name='rotor_2'>
       <pose>-0.1905 0.1905 0.23 0 0 0</pose>
       <inertial>
@@ -288,8 +280,6 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
-    
-    
     <link name='rotor_3'>
       <pose>-0.1905 -0.1905 0.23 0 0 0</pose>
       <inertial>
@@ -355,8 +345,6 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
-    
-    
     <link name='rotor_4'>
       <pose>0.1905 0.1905 0.135 0 0 0</pose>
       <inertial>
@@ -422,8 +410,6 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
-    
-    
     <link name='rotor_5'>
       <pose>0.1905 -0.1905 0.135 0 0 0</pose>
       <inertial>
@@ -489,8 +475,6 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
-    
-    
     <link name='rotor_6'>
       <pose>-0.1905 -0.1905 0.135 0 0 0</pose>
       <inertial>
@@ -556,8 +540,6 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
-    
-    
     <link name='rotor_7'>
       <pose>-0.1905 0.1905 0.135 0 0 0</pose>
       <inertial>
@@ -623,14 +605,11 @@
         <use_parent_model_frame>1</use_parent_model_frame>
       </axis>
     </joint>
-    
-    
     <plugin name='rosbag' filename='libgazebo_multirotor_base_plugin.so'>
       <robotNamespace/>
       <linkName>base_link</linkName>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <plugin name='up_front_right_motor_model' filename='libgazebo_motor_model.so'>
       <robotNamespace/>
       <jointName>rotor_0_joint</jointName>
@@ -648,7 +627,6 @@
       <motorSpeedPubTopic>/motor_speed/0</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <plugin name='up_front_left_motor_model' filename='libgazebo_motor_model.so'>
       <robotNamespace/>
       <jointName>rotor_1_joint</jointName>
@@ -666,7 +644,6 @@
       <motorSpeedPubTopic>/motor_speed/1</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <plugin name='up_back_left_motor_model' filename='libgazebo_motor_model.so'>
       <robotNamespace/>
       <jointName>rotor_2_joint</jointName>
@@ -684,7 +661,6 @@
       <motorSpeedPubTopic>/motor_speed/2</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <plugin name='up_back_right_motor_model' filename='libgazebo_motor_model.so'>
       <robotNamespace/>
       <jointName>rotor_3_joint</jointName>
@@ -702,7 +678,6 @@
       <motorSpeedPubTopic>/motor_speed/3</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <plugin name='down_front_left_motor_model' filename='libgazebo_motor_model.so'>
       <robotNamespace/>
       <jointName>rotor_4_joint</jointName>
@@ -720,7 +695,6 @@
       <motorSpeedPubTopic>/motor_speed/4</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <plugin name='down_front_right_motor_model' filename='libgazebo_motor_model.so'>
       <robotNamespace/>
       <jointName>rotor_5_joint</jointName>
@@ -738,7 +712,6 @@
       <motorSpeedPubTopic>/motor_speed/5</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <plugin name='down_back_right_motor_model' filename='libgazebo_motor_model.so'>
       <robotNamespace/>
       <jointName>rotor_6_joint</jointName>
@@ -756,7 +729,6 @@
       <motorSpeedPubTopic>/motor_speed/6</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <plugin name='down_back_left_motor_model' filename='libgazebo_motor_model.so'>
       <robotNamespace/>
       <jointName>rotor_7_joint</jointName>
@@ -774,7 +746,6 @@
       <motorSpeedPubTopic>/motor_speed/7</motorSpeedPubTopic>
       <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
     </plugin>
-    
     <include>
       <uri>model://gps</uri>
       <pose>0 0 0.144 0 0 0</pose>
@@ -801,7 +772,6 @@
       <baroTopic>/baro</baroTopic>
       <baroDriftPaPerSec>0</baroDriftPaPerSec>
     </plugin>
-    
     <plugin name='mavlink_interface' filename='libgazebo_mavlink_interface.so'>
       <robotNamespace/>
       <imuSubTopic>/imu</imuSubTopic>
@@ -892,9 +862,9 @@
       </control_channels>
     </plugin>
     <static>0</static>
-    <l<plugin name='rotors_gazebo_imu_plugin' filename='libgazebo_imu_plugin.so'>
+    <plugin name='rotors_gazebo_imu_plugin' filename='libgazebo_imu_plugin.so'>
       <robotNamespace/>
-      inkName>/imu_link</linkName>
+      <linkName>/imu_link</linkName>
       <imuTopic>/imu</imuTopic>
       <gyroscopeNoiseDensity>0.00018665</gyroscopeNoiseDensity>
       <gyroscopeRandomWalk>3.8785e-05</gyroscopeRandomWalk>
