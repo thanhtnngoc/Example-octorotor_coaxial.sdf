@@ -7,11 +7,13 @@
 # Motor layout (nhìn từ trên xuống, X = front):
 #
 #       FRONT (+X)
-#   M1(FL) M0(FR)
-#      \   /
-#       [X]
-#      /   \
-#   M2(BL) M3(BR)
+#   M1(UFL) M0(UFR)
+#   M4(DFL) M5(DFR)
+#       \   /
+#        [X]
+#       /   \
+#   M2(UBL) M3(UBR)
+#   M7(DBL) M6(DBR)
 #
 # Coaxial: mỗi arm có 2 motor chồng nhau
 #   FL: M1(upper,CW)  + M4(lower,CCW)
