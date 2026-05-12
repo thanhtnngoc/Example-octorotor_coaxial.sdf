@@ -8,7 +8,7 @@
 
 ## Phần 1 — Chuẩn bị model (SolidWorks → SDF)
 
-### Bước 1 — Vẽ lại model bằng solid block
+### Bước 1 — Vẽ lại model bằng solid
 
 Vẽ lại model bằng các khối đặc (**solid blocks**). Không dùng hình rỗng (hollow shapes) vì có thể gây lỗi collision trong Gazebo.
 
@@ -25,7 +25,7 @@ https://github.com/ros/solidworks_urdf_exporter?tab=readme-ov-file
 
 1. Đặt **điểm** và **trục** tại tâm khối lượng của **base** và từng **cánh quạt**
 2. Thêm coordinate frames vào các điểm đó
-3. Vào **Tools → Export as URDF**, export ra folder **A**
+3. Vào **Tools → Export as URDF**, export ra folder **octorotor_coaxial**
 
 Tham khảo video hướng dẫn:
 ```
@@ -34,7 +34,7 @@ https://www.youtube.com/watch?v=H6YPkXmkdPg&t=1884s
 
 ### Bước 4 — Kiểm tra collision geometry
 
-Upload folder **A** lên trang sau, bật **Show Collision** để kiểm tra collision geometry có đúng không:
+Upload folder **octorotor_coaxial** lên trang sau, bật **Show Collision** để kiểm tra collision geometry có đúng không:
 
 ```
 https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html
@@ -42,10 +42,10 @@ https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html
 
 ### Bước 5 — Convert URDF sang SDF
 
-Copy folder **A** vào Gazebo workspace, vào folder **A/urdf/**, chạy lệnh:
+Copy folder **octorotor_coaxial** vào Gazebo workspace, sau đó vào folder và chuyển **urdf** sang **sdf** bằng lệnh sau:
 
 ```bash
-gz sdf -p A.urdf > A.sdf
+gz sdf -p octorotor_coaxial.urdf > octorotor_coaxial.sdf
 ```
 
 > **Lưu ý:** Tên file `.sdf` phải trùng với tên folder export. Ví dụ: folder tên `octorotor_coaxial` thì file phải là `octorotor_coaxial.sdf`.
@@ -61,25 +61,27 @@ Vào folder:
 PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/models/
 ```
 
-Tạo folder mới tên **B** (ví dụ: `octorotor_coaxial`).  
-Từ folder **A**, copy **mesh folder** và file **A.sdf** vào folder **B**.
+Tạo folder mới tên **octorotor_coaxial**.  
+Sau đó copy **mesh folder** và file **octorotor_coaxial.sdf** ở **Bước 5** vào folder **octorotor_coaxial**.
 
 ### Bước 7 — Tạo file `model.config`
 
-Trong folder **B**, tạo file `model.config` với nội dung sau:
+Trong folder **octorotor_coaxial**, tạo file `model.config` với nội dung sau:
 
 ```xml
 <?xml version="1.0"?>
 <model>
   <name>octorotor_coaxial</name>
   <version>1.0</version>
-  <sdf version="1.7">octorotor_coaxial.sdf</sdf>
+  <sdf version='1.0'>octorotor_coaxial.sdf</sdf>
+
   <author>
-    <name>Your Name</name>
-    <email>you@example.com</email>
+   <name>Tran Nguyen Ngoc Thanh</name>
+   <email>thanhgmail</email>
   </author>
+
   <description>
-    Coaxial octorotor UAV converted from URDF to SDF
+    Coaxial octorotor UAV
   </description>
 </model>
 ```
@@ -87,7 +89,7 @@ Trong folder **B**, tạo file `model.config` với nội dung sau:
 | Trường | Mô tả |
 |--------|-------|
 | `<name>` | Tên model |
-| `<sdf>` | Tên file A.sdf sẽ được gọi khi chạy |
+| `<sdf>` | Tên file .sdf sẽ được gọi khi chạy |
 | `<author>` | Thông tin người tạo |
 | `<description>` | Mô tả model |
 
@@ -95,46 +97,46 @@ Trong folder **B**, tạo file `model.config` với nội dung sau:
 
 ## Phần 3 — Chỉnh sửa file SDF
 
-### Bước 8 — Thêm các plugin vào file A.sdf
+### Bước 8 — Thêm các plugin vào file .sdf
 
-Mở file **A.sdf** trong folder **B** và thêm các đoạn sau.
+Mở file **octorotor_coaxial.sdf** trong folder **octorotor_coaxial** và thêm các đoạn sau.
 
 #### 8.1 — IMU link & joint (thêm ngay sau `</link>` của base_link)
 
 ```xml
-<link name='/imu_link'>
-  <pose>0 0 0.085 0 0 0</pose>
-  <inertial>
-    <pose>0 0 0 0 0 0</pose>
-    <mass>0.015</mass>
-    <inertia>
-      <ixx>1e-05</ixx>
-      <ixy>0</ixy>
-      <ixz>0</ixz>
-      <iyy>1e-05</iyy>
-      <iyz>0</iyz>
-      <izz>1e-05</izz>
-    </inertia>
-  </inertial>
-</link>
-<joint name='/imu_joint' type='revolute'>
-  <child>/imu_link</child>
-  <parent>base_link</parent>
-  <axis>
-    <xyz>0 0 1</xyz>
-    <limit>
-      <lower>0</lower>
-      <upper>0</upper>
-      <effort>0</effort>
-      <velocity>0</velocity>
-    </limit>
-    <dynamics>
-      <spring_reference>0</spring_reference>
-      <spring_stiffness>0</spring_stiffness>
-    </dynamics>
-    <use_parent_model_frame>1</use_parent_model_frame>
-  </axis>
-</joint>
+    <link name='/imu_link'>
+      <pose>0 0 0.085 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.015</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+    </link>
+    <joint name='/imu_joint' type='revolute'>
+      <child>/imu_link</child>
+      <parent>base_link</parent>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <use_parent_model_frame>1</use_parent_model_frame>
+      </axis>
+    </joint>  
 ```
 
 #### 8.2 — Rotational joint (kiểm tra từng joint cánh quạt)
@@ -142,134 +144,134 @@ Mở file **A.sdf** trong folder **B** và thêm các đoạn sau.
 Mỗi joint quay **bắt buộc** phải có đủ các phần sau, nếu thiếu cánh quạt sẽ không quay được. Lặp lại cho **tất cả** các joint cánh quạt:
 
 ```xml
-<link name='rotor_0'>
-  <pose>0.1905 -0.1905 0.23 0 0 0</pose>
-  <inertial>
-    <pose>0 0 0 0 0 0</pose>
-    <mass>0.005</mass>
-    <inertia>
-      <ixx>9.75e-07</ixx>
-      <ixy>0</ixy>
-      <ixz>0</ixz>
-      <iyy>0.000273104</iyy>
-      <iyz>0</iyz>
-      <izz>0.000274004</izz>
-    </inertia>
-  </inertial>
-  <collision name='rotor_0_collision'>
-    <pose>0 0 0.0045 0 0 0</pose>
-    <geometry>
-      <cylinder>
-        <length>0.005</length>
-        <radius>0.128</radius>
-      </cylinder>
-    </geometry>
-    <surface>
-      <contact>
-        <ode/>
-      </contact>
-      <friction>
-        <ode/>
-      </friction>
-    </surface>
-  </collision>
-  <visual name='rotor_0_visual'>
-    <pose>0 0 0 0 0 0</pose>
-    <geometry>
-      <mesh>
-        <scale>1 1 1</scale>
-        <uri>model://iris/meshes/iris_prop_ccw.dae</uri>
-      </mesh>
-    </geometry>
-    <material>
-      <script>
-        <name>Gazebo/Blue</name>
-        <uri>file://media/materials/scripts/gazebo.material</uri>
-      </script>
-    </material>
-  </visual>
-  <gravity>1</gravity>
-  <velocity_decay/>
-</link>
-<joint name='rotor_0_joint' type='revolute'>
-  <child>rotor_0</child>
-  <parent>base_link</parent>
-  <axis>
-    <xyz>0 0 1</xyz>
-    <limit>
-      <lower>-1e+16</lower>
-      <upper>1e+16</upper>
-    </limit>
-    <dynamics>
-      <spring_reference>0</spring_reference>
-      <spring_stiffness>0</spring_stiffness>
-    </dynamics>
-    <use_parent_model_frame>1</use_parent_model_frame>
-  </axis>
-</joint>
+    <link name='rotor_0'>                        <!-- CHANGE THIS VALUE -->
+      <pose>0.1905 -0.1905 0.23 0 0 0</pose>     <!-- CHANGE THIS VALUE -->
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.005</mass>                       <!-- CHANGE THIS VALUE -->
+        <inertia>
+          <ixx>9.75e-07</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.000273104</iyy>
+          <iyz>0</iyz>
+          <izz>0.000274004</izz>
+        </inertia>
+      </inertial>
+      <collision name='rotor_0_collision'>       <!-- CHANGE THIS VALUE -->
+        <pose>0 0 0.0045 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.005</length>
+            <radius>0.128</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='rotor_0_visual'>             <!-- CHANGE THIS VALUE -->
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://octorotor_coaxial/meshes/prop_ccw.dae</uri>    <!-- CHANGE THIS VALUE -->
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Blue</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <gravity>1</gravity>
+      <velocity_decay/>
+    </link>
+    <joint name='rotor_0_joint' type='revolute'>    <!-- CHANGE THIS VALUE -->
+      <child>rotor_0</child>                        <!-- CHANGE THIS VALUE -->
+      <parent>base_link</parent>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+        <use_parent_model_frame>1</use_parent_model_frame>
+      </axis>
+    </joint>
 ```
 
 #### 8.3 — Plugin base (copy nguyên, không sửa)
 
 ```xml
-<plugin name='rosbag' filename='libgazebo_multirotor_base_plugin.so'>
-  <robotNamespace/>
-  <linkName>base_link</linkName>
-  <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
-</plugin>
+    <plugin name='rosbag' filename='libgazebo_multirotor_base_plugin.so'>
+      <robotNamespace/>
+      <linkName>base_link</linkName>
+      <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+    </plugin>
 ```
 
 #### 8.4 — Plugin motor (lặp lại cho từng motor)
 
 ```xml
-<plugin name='front_right_motor_model' filename='libgazebo_motor_model.so'>
-  <robotNamespace/>
-  <jointName>rotor_0_joint</jointName>          <!-- tên joint và link tương ứng -->
-  <linkName>rotor_0</linkName>
-  <turningDirection>ccw</turningDirection>  <!-- ccw hoặc cw nhìn từ trên -->
-  <timeConstantUp>0.0125</timeConstantUp>
-  <timeConstantDown>0.025</timeConstantDown>
-  <maxRotVelocity>1199</maxRotVelocity>
-  <motorConstant>7.2706e-06</motorConstant>   <!-- thông số motor -->
-  <momentConstant>0.06</momentConstant>
-  <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
-  <motorNumber>0</motorNumber>              <!-- index bắt đầu từ 0 -->
-  <rotorDragCoefficient>0.000175</rotorDragCoefficient>
-  <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
-  <motorSpeedPubTopic>/motor_speed/0</motorSpeedPubTopic>
-  <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
-</plugin>
+    <plugin name='up_front_right_motor_model' filename='libgazebo_motor_model.so'>
+      <robotNamespace/>
+      <jointName>rotor_0_joint</jointName>      <!-- tên joint và link tương ứng -->
+      <linkName>rotor_0</linkName>
+      <turningDirection>ccw</turningDirection>      <!-- ccw hoặc cw nhìn từ trên -->
+      <timeConstantUp>0.0125</timeConstantUp>
+      <timeConstantDown>0.025</timeConstantDown>
+      <maxRotVelocity>1199</maxRotVelocity>      <!-- thông số motor -->
+      <motorConstant>7.2706e-06</motorConstant>      <!-- thông số motor -->
+      <momentConstant>0.06</momentConstant>
+      <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+      <motorNumber>0</motorNumber>                                   <!-- index bắt đầu từ 0 -->
+      <rotorDragCoefficient>0.000175</rotorDragCoefficient>
+      <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+      <motorSpeedPubTopic>/motor_speed/0</motorSpeedPubTopic>
+      <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+    </plugin>
 ```
 
-#### 8.5 — GPS, sensors, và MAVLink plugins (copy nguyên, không sửa)
+#### 8.5 — GPS, sensors plugins (copy nguyên, không sửa)
 
 ```xml
-<include>
-  <uri>model://gps</uri>
-  <pose>0 0 0.144 0 0 0</pose>
-  <name>gps0</name>
-</include>
-<joint name='gps0_joint' type='fixed'>
-  <child>gps0::link</child>
-  <parent>base_link</parent>
-</joint>
-<plugin name='groundtruth_plugin' filename='libgazebo_groundtruth_plugin.so'>
-  <robotNamespace/>
-</plugin>
-<plugin name='magnetometer_plugin' filename='libgazebo_magnetometer_plugin.so'>
-  <robotNamespace/>
-  <pubRate>100</pubRate>
-  <noiseDensity>0.0004</noiseDensity>
-  <randomWalk>6.4e-06</randomWalk>
-  <biasCorrelationTime>600</biasCorrelationTime>
-  <magTopic>/mag</magTopic>
-</plugin>
-<plugin name='barometer_plugin' filename='libgazebo_barometer_plugin.so'>
-  <robotNamespace/>
-  <pubRate>50</pubRate>
-  <baroTopic>/baro</baroTopic>
-  <baroDriftPaPerSec>0</baroDriftPaPerSec>
-</plugin>
+    <include>
+      <uri>model://gps</uri>
+      <pose>0 0 0.144 0 0 0</pose>
+      <name>gps0</name>
+    </include>
+    <joint name='gps0_joint' type='fixed'>
+      <child>gps0::link</child>
+      <parent>base_link</parent>
+    </joint>
+    <plugin name='groundtruth_plugin' filename='libgazebo_groundtruth_plugin.so'>
+      <robotNamespace/>
+    </plugin>
+    <plugin name='magnetometer_plugin' filename='libgazebo_magnetometer_plugin.so'>
+      <robotNamespace/>
+      <pubRate>100</pubRate>
+      <noiseDensity>0.0004</noiseDensity>
+      <randomWalk>6.4e-06</randomWalk>
+      <biasCorrelationTime>600</biasCorrelationTime>
+      <magTopic>/mag</magTopic>
+    </plugin>
+    <plugin name='barometer_plugin' filename='libgazebo_barometer_plugin.so'>
+      <robotNamespace/>
+      <pubRate>50</pubRate>
+      <baroTopic>/baro</baroTopic>
+      <baroDriftPaPerSec>0</baroDriftPaPerSec>
+    </plugin>
 ```
 
 #### 8.6 — MAVLink interface plugin
@@ -277,61 +279,69 @@ Mỗi joint quay **bắt buộc** phải có đủ các phần sau, nếu thiế
 Plugin sau phần (motor index và joint name) chỉnh theo số motor của bạn, lặp lại cho tất cả motor:
 
 ```xml
-<plugin name='mavlink_interface' filename='libgazebo_mavlink_interface.so'>
-    <robotNamespace/>
-    <imuSubTopic>/imu</imuSubTopic>
-    <magSubTopic>/mag</magSubTopic>
-    <baroSubTopic>/baro</baroSubTopic>
-    <mavlink_addr>INADDR_ANY</mavlink_addr>
-    <mavlink_tcp_port>4560</mavlink_tcp_port>
-    <mavlink_udp_port>14560</mavlink_udp_port>
-    <serialEnabled>0</serialEnabled>
-    <serialDevice>/dev/ttyACM0</serialDevice>
-    <baudRate>921600</baudRate>
-    <qgc_addr>INADDR_ANY</qgc_addr>
-    <qgc_udp_port>14550</qgc_udp_port>
-    <sdk_addr>INADDR_ANY</sdk_addr>
-    <sdk_udp_port>14540</sdk_udp_port>
-    <hil_mode>0</hil_mode>
-    <hil_state_level>0</hil_state_level>
-    <send_vision_estimation>0</send_vision_estimation>
-    <send_odometry>1</send_odometry>
-    <enable_lockstep>1</enable_lockstep>
-    <use_tcp>1</use_tcp>
-    <motorSpeedCommandPubTopic>/gazebo/command/motor_speed</motorSpeedCommandPubTopic>
-    <control_channels>
-      <channel name='rotor1'>
-        <input_index>0</input_index>
-        <input_offset>0</input_offset>
-        <input_scaling>1000</input_scaling>
-        <zero_position_disarmed>0</zero_position_disarmed>
-        <zero_position_armed>100</zero_position_armed>
-        <joint_control_type>velocity</joint_control_type>
-      </channel>
-    <channel name='rotor2'>
-      <!-- lặp lại tương tự cho các motor còn lại -->
-    </channel>
-  </control_channels>
-</plugin>
+    <plugin name='mavlink_interface' filename='libgazebo_mavlink_interface.so'>
+      <robotNamespace/>
+      <imuSubTopic>/imu</imuSubTopic>
+      <magSubTopic>/mag</magSubTopic>
+      <baroSubTopic>/baro</baroSubTopic>
+      <mavlink_addr>INADDR_ANY</mavlink_addr>
+      <mavlink_tcp_port>4560</mavlink_tcp_port>
+      <mavlink_udp_port>14560</mavlink_udp_port>
+      <serialEnabled>0</serialEnabled>
+      <serialDevice>/dev/ttyACM0</serialDevice>
+      <baudRate>921600</baudRate>
+      <qgc_addr>INADDR_ANY</qgc_addr>
+      <qgc_udp_port>14550</qgc_udp_port>
+      <sdk_addr>INADDR_ANY</sdk_addr>
+      <sdk_udp_port>14540</sdk_udp_port>
+      <hil_mode>0</hil_mode>
+      <hil_state_level>0</hil_state_level>
+      <send_vision_estimation>0</send_vision_estimation>
+      <send_odometry>1</send_odometry>
+      <enable_lockstep>1</enable_lockstep>
+      <use_tcp>1</use_tcp>
+      <motorSpeedCommandPubTopic>/gazebo/command/motor_speed</motorSpeedCommandPubTopic>
+      <control_channels>
+        <channel name='rotor1'>
+          <input_index>0</input_index>
+          <input_offset>0</input_offset>
+          <input_scaling>1000</input_scaling>
+          <zero_position_disarmed>0</zero_position_disarmed>
+          <zero_position_armed>100</zero_position_armed>
+          <joint_control_type>velocity</joint_control_type>
+        </channel>
+        <channel name='rotor2'>
+          <input_index>1</input_index>
+          <input_offset>0</input_offset>
+          <input_scaling>1000</input_scaling>
+          <zero_position_disarmed>0</zero_position_disarmed>
+          <zero_position_armed>100</zero_position_armed>
+          <joint_control_type>velocity</joint_control_type>
+        </channel>
+        <channel name='rotor3'>
+          <!-- lặp lại tương tự cho các motor còn lại -->
+        </channel>
+      </control_channels>
+    </plugin>
 ```
 
 #### 8.7 — IMU plugin (copy nguyên, không sửa)
 
 ```xml
-<static>0</static>
-<l<plugin name='rotors_gazebo_imu_plugin' filename='libgazebo_imu_plugin.so'>
-  <robotNamespace/>
-  inkName>/imu_link</linkName>
-  <imuTopic>/imu</imuTopic>
-  <gyroscopeNoiseDensity>0.00018665</gyroscopeNoiseDensity>
-  <gyroscopeRandomWalk>3.8785e-05</gyroscopeRandomWalk>
-  <gyroscopeBiasCorrelationTime>1000.0</gyroscopeBiasCorrelationTime>
-  <gyroscopeTurnOnBiasSigma>0.0087</gyroscopeTurnOnBiasSigma>
-  <accelerometerNoiseDensity>0.00186</accelerometerNoiseDensity>
-  <accelerometerRandomWalk>0.006</accelerometerRandomWalk>
-  <accelerometerBiasCorrelationTime>300.0</accelerometerBiasCorrelationTime>
-  <accelerometerTurnOnBiasSigma>0.196</accelerometerTurnOnBiasSigma>
-</plugin>
+    <static>0</static>
+    <plugin name='rotors_gazebo_imu_plugin' filename='libgazebo_imu_plugin.so'>
+      <robotNamespace/>
+      <linkName>/imu_link</linkName>
+      <imuTopic>/imu</imuTopic>
+      <gyroscopeNoiseDensity>0.00018665</gyroscopeNoiseDensity>
+      <gyroscopeRandomWalk>3.8785e-05</gyroscopeRandomWalk>
+      <gyroscopeBiasCorrelationTime>1000.0</gyroscopeBiasCorrelationTime>
+      <gyroscopeTurnOnBiasSigma>0.0087</gyroscopeTurnOnBiasSigma>
+      <accelerometerNoiseDensity>0.00186</accelerometerNoiseDensity>
+      <accelerometerRandomWalk>0.006</accelerometerRandomWalk>
+      <accelerometerBiasCorrelationTime>300.0</accelerometerBiasCorrelationTime>
+      <accelerometerTurnOnBiasSigma>0.196</accelerometerTurnOnBiasSigma>
+    </plugin>
 ```
 
 > **Tham khảo SDF đầy đủ:** https://github.com/thanhtnngoc/Example-octorotor_coaxial.sdf
@@ -359,32 +369,94 @@ Ví dụ: `22000_gazebo-classic_octorotor_coaxial`
 
 ```sh
 #!/bin/sh
+#
 # @name Octorotor Coaxial Custom
 # @type Octorotor coaxial
 # @class Copter
-# @maintainer Your Name <your@email.com>
+#
+# Motor layout (nhìn từ trên xuống, X = front):
+#
+#       FRONT (+X)
+#   M1(UFL) M0(UFR)
+#   M4(DFL) M5(DFR)
+#       \   /
+#        [X]
+#       /   \
+#   M2(UBL) M3(UBR)
+#   M7(DBL) M6(DBR)
+#
+# Coaxial: mỗi arm có 2 motor chồng nhau
+#   FL: M1(upper,CW)  + M4(lower,CCW)
+#   FR: M0(upper,CCW) + M5(lower,CW)
+#   BL: M2(upper,CCW) + M7(lower,CW)  <- prop8 trong SDF
+#   BR: M3(upper,CW)  + M6(lower,CCW) <- prop7 trong SDF
+#
+# Mapping channel → joint:
+#   CH0 → prop1 (FR upper CCW)
+#   CH1 → prop2 (FL upper CW)
+#   CH2 → prop3 (BL upper CCW)
+#   CH3 → prop4 (BR upper CW)
+#   CH4 → prop5 (FL lower CCW)
+#   CH5 → prop6 (FR lower CW)
+#   CH6 → prop7 (BR lower CCW)
+#   CH7 → prop8 (BL lower CW)
 
 . ${R}etc/init.d/rc.mc_defaults
 
 param set-default CA_AIRFRAME 0
 param set-default CA_ROTOR_COUNT 8
 
-# Rotor 1 — vị trí và chiều quay
-param set-default CA_ROTOR0_PX  0.192121   # khoảng cách theo X từ tâm (m)
-param set-default CA_ROTOR0_PY  0.193271   # khoảng cách theo Y từ tâm (m)
-param set-default CA_ROTOR0_KM  0.05       # KM > 0: CCW | KM < 0: CW
+# --- Tầng trên ---
+# ROTOR0 = prop1 = Front-Right upper, CCW → KM dương
+param set-default CA_ROTOR0_PX  0.1905
+param set-default CA_ROTOR0_PY 0.1905
+param set-default CA_ROTOR0_KM  0.035
 
-# Rotor 2
-param set-default CA_ROTOR1_PX  0.192452
-param set-default CA_ROTOR1_PY -0.192939
-param set-default CA_ROTOR1_KM -0.05
+# ROTOR1 = prop2 = Front-Left upper, CW → KM âm
+param set-default CA_ROTOR1_PX  0.1905
+param set-default CA_ROTOR1_PY  -0.1905
+param set-default CA_ROTOR1_KM -0.035
 
-# ... lặp lại cho tất cả motor
+# ROTOR2 = prop3 = Back-Left upper, CCW → KM dương
+param set-default CA_ROTOR2_PX -0.1905
+param set-default CA_ROTOR2_PY  -0.1905
+param set-default CA_ROTOR2_KM  0.035
 
-# PWM output mapping (số lượng tương ứng số motor)
+# ROTOR3 = prop4 = Back-Right upper, CW → KM âm
+param set-default CA_ROTOR3_PX -0.1905
+param set-default CA_ROTOR3_PY 0.1905
+param set-default CA_ROTOR3_KM -0.035
+
+# --- Tầng dưới (coaxial, ngược chiều với motor cùng arm) ---
+# ROTOR4 = prop5 = Front-Left lower, CCW → KM dương (ngược ROTOR1/CW)
+param set-default CA_ROTOR4_PX  0.1905
+param set-default CA_ROTOR4_PY  -0.1905
+param set-default CA_ROTOR4_KM  0.035
+
+# ROTOR5 = prop6 = Front-Right lower, CW → KM âm (ngược ROTOR0/CCW)
+param set-default CA_ROTOR5_PX  0.1905
+param set-default CA_ROTOR5_PY 0.1905
+param set-default CA_ROTOR5_KM -0.035
+
+# ROTOR6 = prop7 = Back-Right lower, CCW → KM dương (ngược ROTOR3/CW)
+param set-default CA_ROTOR6_PX -0.1905
+param set-default CA_ROTOR6_PY 0.1905
+param set-default CA_ROTOR6_KM  0.035
+
+# ROTOR7 = prop8 = Back-Left lower, CW → KM âm (ngược ROTOR2/CCW)
+param set-default CA_ROTOR7_PX -0.1905
+param set-default CA_ROTOR7_PY  -0.1905
+param set-default CA_ROTOR7_KM -0.035
+
+# --- PWM output mapping ---
 param set-default PWM_MAIN_FUNC1 101
 param set-default PWM_MAIN_FUNC2 102
-# ... tiếp tục đến hết số motor
+param set-default PWM_MAIN_FUNC3 103
+param set-default PWM_MAIN_FUNC4 104
+param set-default PWM_MAIN_FUNC5 105
+param set-default PWM_MAIN_FUNC6 106
+param set-default PWM_MAIN_FUNC7 107
+param set-default PWM_MAIN_FUNC8 108
 ```
 
 **KM convention:**
@@ -407,7 +479,7 @@ Trong cùng folder trên, mở `CMakeLists.txt`, thêm tên file vào cuối dan
 
 Vào file:
 ```
-PX4-Autopilot/src/modules/simulation/simulator_mavlink/sitl_targets_gazebo-classic
+PX4-Autopilot/src/modules/simulation/simulator_mavlink/sitl_targets_gazebo-classic.cmake
 ```
 
 Tìm section `set(models ...)` và thêm tên model vào:
@@ -437,10 +509,10 @@ make px4_sitl gazebo-classic_octorotor_coaxial
 ### Bước 14 — Tạo folder model HITL
 
 1. Vào folder `PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic/models/`
-2. Copy folder **B** (tạo ở Bước 6), đổi tên thành **B_hitl** (ví dụ: `octorotor_coaxial_hitl`)
+2. Copy folder **octorotor_coaxial** (tạo ở Bước 6), đổi tên thành **octorotor_coaxial_hitl** 
 3. Trong folder **B_hitl**, giữ lại: file `model.config` và file `A.sdf`
-4. Đổi tên `A.sdf` thành `A_hitl.sdf`
-5. Trong `A_hitl.sdf`, sửa các tham số sau trong plugin `mavlink_interface`:
+4. Đổi tên `octorotor_coaxial.sdf` thành `octorotor_coaxial_hitl.sdf`
+5. Trong `octorotor_coaxial_hitl.sdf`, sửa các tham số sau trong plugin `mavlink_interface`:
 
 ```xml
 <serialEnabled>1</serialEnabled>      <!-- đổi từ 0 thành 1 -->
@@ -454,15 +526,17 @@ make px4_sitl gazebo-classic_octorotor_coaxial
 ```xml
 <?xml version="1.0"?>
 <model>
-  <name>octorotor_coaxial_hitl</name>
+  <name>octorotor_coaxial</name>
   <version>1.0</version>
-  <sdf version="1.7">octorotor_coaxial_hitl.sdf</sdf>
+  <sdf version='1.0'>octorotor_coaxial_hitl.sdf</sdf>
+
   <author>
-    <name>Your Name</name>
-    <email>you@example.com</email>
+   <name>Tran Nguyen Ngoc Thanh</name>
+   <email>thanhgmail</email>
   </author>
+
   <description>
-    Coaxial octorotor UAV converted from URDF to SDF
+    Coaxial octorotor UAV
   </description>
 </model>
 ```
@@ -477,7 +551,7 @@ PX4-Autopilot/ROMFS/px4fmu_common/init.d/airframes/
 Tạo file mới theo pattern: `ID_modelname.hil`  
 Dùng ID trong khoảng **1000 – 1999**.
 
-Ví dụ: `1103_octorotor.hil`
+Ví dụ: `1003_octorotor.hil`
 
 ```sh
 #!/bin/sh
